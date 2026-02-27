@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AmitEventHub - User Login</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static',filename='apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static',filename='favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static',filename='favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static',filename='site.webmanifest') }}">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: aliceblue;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      animation: fadeIn 1s ease-in-out;
+      padding: 0 20px; /* Add padding to the body to ensure space on sides */
+    }
+    
+    .container {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 500px; /* Increased max-width for larger screens */
+      padding: 20px; /* Increased padding for better spacing */
+      animation: fadeIn 1s ease-in-out;
+      overflow: hidden;
+    }
+    
+     
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      background-color: #04172b;/* Optional: Background color */
+  }
+
+    
+    .header img {
+      max-width: 100%;
+      height: auto;
+      max-height: 60px; /* Adjust this value to your preference */
+  }
+
+  @media (max-width: 768px) {
+      .header {
+          flex-direction: column;
+      }
+
+      .header img {
+          max-height: 40px; /* Adjust this value to your preference */
+          margin-bottom: 10px;
+      }
+  }
+    
+    .header img:first-child {
+      max-height: 60px;
+    }
+    
+    
+    .login-form {
+      width: 100%;
+      margin-top: 15px;
+    }
+    
+    .form-group {
+      margin-bottom: 15px; /* Increased margin for better spacing */
+      width: 100%;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #04172b;
+      text-align: left;
+      width: 100%;
+    }
+    
+    input, button {
+      width: 100%;
+      padding: 12px; /* Increased padding for better touch target */
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      transition: 0.4s ease;
+    }
+    
+    input:focus, button:focus {
+      outline: none;
+      border-color: #243a73;
+    }
+    
+    button {
+      background-image: linear-gradient(to right, #04172b 0%, #243a73 100%);
+      color: white;
+      cursor: pointer;
+    }
+    
+    button:hover {
+      background-image: linear-gradient(to right, #243a73 0%, #3f51b5 100%);
+    }
+    
+    .form-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px; /* Increased margin for better spacing */
+      width: 100%;
+    }
+    
+    #login-link, #signup-link {
+      color: #04172b;
+      text-decoration: none;
+      transition: 0.3s ease;
+    }
+    
+    #login-link:hover, #signup-link:hover {
+      color: #243a73;
+    }
+    
+    .signup-container {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin-top: 15px; /* Increased margin for better spacing */
+    }
+    
+    .auth-links {
+      text-align: center;
+    }
+    
+    .auth-links a {
+      display: inline-block;
+      margin-right: 15px;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+    }
+    
+    .auth-links a:hover {
+      border-color: #333;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .container {
+        width: 100%;
+        max-width: 90%; /* Ensure space on sides for medium screens */
+        padding: 15px;
+      }
+    
+      .header {
+        font-size: 1em;
+        padding: 12px;
+      }
+    
+      input, button {
+        padding: 10px;
+      }
+    
+      .form-actions {
+        flex-direction: column;
+        gap: 10px;
+      }
+    
+      .auth-links a {
+        margin-right: 10px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        width: 100%;
+        max-width: 90%; /* Ensure space on sides for small screens */
+        padding: 10px;
+      }
+    
+      .header {
+        font-size: 0.9em;
+        padding: 10px;
+      }
+    
+      input, button {
+        padding: 8px;
+      }
+    
+      .form-actions {
+        flex-direction: column;
+        gap: 10px;
+      }
+    
+      .auth-links a {
+        margin-right: 5px;
+      }
+    }
+    .password-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+  
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      cursor: pointer;
+    }
+    /* Ensure all form inputs have consistent width */
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box; /* Ensures padding and border are included in the total width */
+}
+
+/* Optional: Add some margin between form groups */
+.form-group {
+  margin-bottom: 15px;
+}
+
+    
+  </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <img src="{{ url_for('static',filename='L1.png') }}" alt="Logo1">
+        <img src="{{ url_for('static',filename='L2.png') }}" alt="Logo2">
+      </div>
+      <div class="login-form">
+      
+        {% if error %}
+        <p><strong>Error </strong> : {{error}}</p>
+        <script>
+          alert("Incorrect username/password. Please Try again.")
+        </script>
+        {% endif %}
+        <form id="userLoginForm" method="post" onsubmit="return validatePassword()">
+          <div class="form-group">
+            <label for="user-username">Username:</label>
+            <input type="text" id="user-username" name="user-username">
+          </div>
+          <div class="form-group">
+            <label for="old-password">Old Password:</label>
+            <div class="password-container">
+              <input type="password" id="old-password" name="old-password" required>
+              <i class="fas fa-eye toggle-password" data-toggle="#old-password"></i>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="new-password">New Password:</label>
+            <div class="password-container">
+              <input type="password" id="new-password" name="new-password" required>
+              <i class="fas fa-eye toggle-password" data-toggle="#new-password"></i>
+            </div>
+            <small id="passwordHelp" style="display: none; color: red;">
+              Password must contain at least 7 characters, including an uppercase letter, a lowercase letter, a number, and a special character.
+            </small>
+          </div>
+          <div class="form-group">
+            <label for="confirm-new-password">Confirm New Password:</label>
+            <div class="password-container">
+              <input type="password" id="confirm-new-password" name="confirm-new-password" required>
+              <i class="fas fa-eye toggle-password" data-toggle="#confirm-new-password"></i>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit">Update Password</button>
+          </div>
+          <div class="auth-links">
+            <a id="Login-page-link" href="{{ url_for('userlogin') }}">Back to User Login</a>
+          </div>
+        </form>
+      </div>
+    </div>
+        
+    <script>
+      document.querySelectorAll('.toggle-password').forEach(item => {
+        item.addEventListener('click', function() {
+          const input = document.querySelector(this.getAttribute('data-toggle'));
+          if (input.type === 'password') {
+            input.type = 'text';
+            this.classList.remove('fa-eye');
+            this.classList.add('fa-eye-slash');
+          } else {
+            input.type = 'password';
+            this.classList.remove('fa-eye-slash');
+            this.classList.add('fa-eye');
+          }
+        });
+      });
+    
+     
+    </script>
+    <script>
+        function validatePassword() {
+          const newPassword = document.getElementById('new-password').value;
+          const confirmPassword = document.getElementById('confirm-new-password').value;
+          const passwordHelp = document.getElementById('passwordHelp');
+        
+          // Regular expression to check the password criteria
+          const passwordCriteria = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{7,}$/;
+        
+          if (!passwordCriteria.test(newPassword)) {
+            passwordHelp.style.display = 'block';
+            return false;
+          } else {
+            passwordHelp.style.display = 'none';
+          }
+        
+          if (newPassword !== confirmPassword) {
+            alert('New password and confirm password do not match.');
+            return false;
+          }
+          // fetch("{{server_link}}/resetpassworduser", {
+          //   method: "POST",
+          //   body: JSON.stringify({
+          //     username: getElementById('user-username').value,
+          //     oldpass: getElementById('old-password').value,
+          //     newpass: getElementById('new-password').value
+          //   }),
+          //   headers: {
+          //     "Content-Type": "application/json"
+          //   }
+          // });
+            // .then((response) => response.json())
+            // .then((json) => console.log(json));
+            usernm = document.getElementById('user-username').value;
+            oldpass = document.getElementById('old-password').value;
+            newpass = document.getElementById('new-password').value;
+            const dataToSend = JSON.stringify({"user-username": usernm, "old-password": oldpass,"new-password": newpass});
+            let dataReceived = ""; 
+            fetch("", {
+                credentials: "same-origin",
+                mode: "same-origin",
+                method: "post",
+                headers: { "Content-Type": "application/json" },
+                body: dataToSend
+            })
+                .then(resp => {
+                    if (resp.status === 200) {
+                      // window.location.href = `{{server_link}}/login`;
+                        return resp.json()
+                    } else {
+                        console.log("Status: " + resp.status)
+                        return Promise.reject("server")
+                    }
+                })
+                .then(dataJson => {
+                    dataReceived = JSON.parse(dataJson)
+                })
+                .catch(err => {
+                    if (err === "server") return
+                    console.log(err)
+                })
+
+            console.log(`Received: ${dataReceived}`)  
+            // if (dataReceived === "success") {
+            //   alert("Password Updated Successfully");
+            // } else {
+            //   alert("Password Update Failed");
+              
+            // }
+          return true;
+        }
+    </script>
+  </body>
+  </html>
+  

@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Bookings - Hall Management System</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static',filename='apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static',filename='favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static',filename='favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static',filename='site.webmanifest') }}">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+  <style>
+    body {
+      background-color: aliceblue;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+  }
+  
+  :root {
+      --primary-color: #04172b;
+      --secondary-color: #061b31;
+      --white: #ffffff;
+      --gray: #6c757d;   
+      --light-green: #90ee90;
+      --light-red: #ffcccb;
+  }
+  
+  .navbar {
+      background-color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      flex-wrap: nowrap;
+      justify-content: space-evenly; /* Space between logo and menu */
+  }
+  
+  .logo-container {
+    display: flex;
+    align-items: center;
+    flex: 0 1 auto; /* Prevent the logo from stretching */
+    margin-right: 0; /* Align logo container to the left */
+}
+  
+.navbar .logo img {
+  height: 50px;
+  margin-right: 2px;
+}
+
+.navbar .name img {
+  height: 40px;
+}
+  
+  .navbar .menu {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    justify-content: space-evenly; /* Evenly space out menu items */
+    flex: 0 1 auto; /* Prevent the menu from stretching */
+    margin-left: 0; /* Align menu to the right */
+}
+
+  
+  .navbar .menu a {
+      color: var(--white);
+      text-decoration: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      transition: background-color 0.3s, box-shadow 0.3s;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      white-space: nowrap; /* Prevent text wrapping */
+      text-align: center;
+      justify-content: center;
+      flex: 1;
+  }
+  
+  .navbar .menu a:hover {
+      background-color: var(--secondary-color);
+      transform: scale(1.05);
+      box-shadow: 0 0 0 2px aliceblue;
+  }
+  
+  .navbar .icon {
+      font-size: 20px;
+      color: var(--white);
+      padding: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      position: relative;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+      .navbar {
+          padding: 10px;
+      }
+  
+      .navbar .menu a {
+          padding: 8px 10px;
+          font-size: 12px;
+      }
+  }
+  
+  @media (min-width: 769px) and (max-width: 1024px) {
+      .navbar .menu a {
+          padding: 10px;
+          font-size: 14px;
+      }
+  }
+  
+  @media (min-width: 1025px) {
+      .navbar {
+          justify-content: space-between; /* Maintain space-between on large screens */
+      }
+  
+      .logo-container {
+          margin-right: auto; /* Position logo container to the left */
+      }
+  
+      .navbar .menu {
+          margin-left: auto; /* Position menu to the right */
+      }
+  }
+    
+
+
+  
+  
+  /* Base styles (mobile-first) */
+
+  .navbar {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .logo img, .name img {
+    height: auto;
+    max-width: 100%;
+  }
+  
+  /* Responsive adjustments */
+  @media (min-width: 600px) {
+    .navbar {
+      flex-direction: row;
+    }
+  
+   
+  }
+
+
+
+  
+  .container {  
+      width: 80%;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+      animation: fadeIn 2s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+      from {
+          opacity: 0;
+      }
+      to {
+          opacity: 1;
+      }
+  }
+  
+  #bookingList {
+      width: 100%;
+      overflow-x: auto; /* Allows horizontal scrolling */
+  }
+  
+  .table-wrapper {
+      width: 100%;
+      overflow-x: auto; /* Ensures table scrolls if content overflows */
+  }
+  
+  table {
+      width: 100%;
+      table-layout: fixed; /* Ensures fixed layout for equal column width */
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      animation: tableSlideIn 1s ease-in-out;
+      min-width: 600px; /* Ensures the table has a minimum width */
+  }
+  
+  @keyframes tableSlideIn {
+      from {
+          transform: translateX(-100px);
+      }
+      to {
+          transform: translateX(0);
+      }
+  }
+  
+  table, th, td {
+      background-color: whitesmoke;
+      border: 1px solid #ddd;
+  }
+  
+  th, td {
+      padding: 12px;
+      text-align: left;
+      word-wrap: break-word; /* Ensures content wraps within cells */
+  }
+  
+  th {
+      background-color: #04172b;
+      color: white;
+  }
+  
+  .form-group {
+      margin-bottom: 20px;
+  }
+  
+  label {
+      font-weight: bold;
+      color: #333;
+  }
+  
+  input[type="text"], input[type="date"], select, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 16px;
+      margin-top: 5px;
+  }
+  
+  select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-color: #fff;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 9.5L0 3h12L6 9.5z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position-x: calc(100% - 12px);
+      background-position-y: center;
+      padding-right: 40px;
+  }
+  
+  button {
+      background-image: linear-gradient(to right, #04172b 0%, #243a73 100%);
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+      transform: scale(1.05); /* Slightly increase the size */
+      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Enhance the shadow */
+  }
+  
+  .search-bar {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 10px;
+  }
+  
+  .dropdown {
+      position: relative;
+      display: inline-block;
+  }
+  
+  .dropbtn {
+      background-color: #2CA58D;
+      color: white;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+  }
+  
+  .dropdown:hover .dropdown-content {
+      display: block;
+  }
+  
+  .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+  }
+  
+  .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+  }
+  
+  .dropdown-content a:hover {
+      background-color: #f1f1f1;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+      .container {
+          width: 90%;
+      }
+  
+      th, td {
+          padding: 8px;
+          font-size: 14px;
+      }
+  
+      input[type="text"], input[type="date"], select, textarea {
+          font-size: 14px;
+      }
+  
+      button {
+          font-size: 14px;
+          padding: 10px 18px;
+      }
+  }
+  
+  @media (max-width: 768px) {
+      .container {
+          width: 95%;
+      }
+  
+      th, td {
+          padding: 6px;
+          font-size: 12px;
+      }
+  
+      input[type="text"], input[type="date"], select, textarea {
+          font-size: 12px;
+      }
+  
+      button {
+          font-size: 12px;
+          padding: 8px 16px;
+      }
+  
+      .dropbtn {
+          font-size: 14px;
+          padding: 10px;
+      }
+  }
+  
+  @media (max-width: 480px) {
+      .container {
+          width: 100%;
+      }
+  
+      th, td {
+          padding: 4px;
+          font-size: 10px;
+      }
+  
+      input[type="text"], input[type="date"], select, textarea {
+          font-size: 10px;
+          padding: 8px;
+      }
+  
+      button {
+          font-size: 10px;
+          padding: 6px 12px;
+      }
+  
+      .dropbtn {
+          font-size: 12px;
+          padding: 8px;
+      }
+  }
+  
+
+</style>
+</head>
+
+<body>
+  <header>
+    <div class="navbar">
+      <div class="logo-container">
+          <div class="logo">
+            <img src="{{ url_for('static',filename='L1.png') }}" alt="Logo">
+          </div>
+          <div class="name">
+              <img src="{{ url_for('static',filename='L2.png')}}" alt="Name Logo">
+          </div>
+      </div>
+      <div class="menu">
+        <a href="{{url_for('admin')}}"><i class="fas fa-home"></i> Home</a>
+        
+        <a href="{{url_for('admincalender')}}" class="menu-item">
+          <i class="fas fa-calendar-alt"></i> <!-- Calendar icon -->
+           Calendar
+        </a>
+        <a href="{{url_for('adminnoti')}}" class="menu-item">
+          <i class="fas fa-bell"></i> <!-- Notification icon -->
+           Updates
+        </a>
+        <a href="{{url_for('home')}}"><i class="fas fa-power-off"></i> Logout</a>
+      </div>
+    </div>
+  </header>
+  <div class="container">
+    <h2>All Bookings</h2>
+
+    <!-- Sorting dropdown -->
+    <div class="dropdown">
+      <button class="dropbtn">Sort by Status</button>
+      <div class="dropdown-content">
+        <a href="#" onclick="filterAndSortBookings('', '');" value="">All</a>     <!-- kadia refresh  page : filterAndSortBookings('', '');-->
+        <a href="#" onclick="sortBookings('PENDING')">Pending</a>
+        <a href="#" onclick="sortBookings('REJECTED')">Rejected</a>
+        <a href="#" onclick="sortBookings('ACCEPTED')">Accepted</a>
+      </div>
+    </div>
+
+    <!-- Search bar -->
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search bookings">
+    </div>
+
+    <!-- Booking list -->
+    <div id="bookingList">
+      <!-- This will be populated dynamically with booking data -->
+    </div>
+
+    <!-- Export button -->
+    <button onclick="exportToExcel()">Export to Excel</button>
+    
+    <script>
+      const bookings = [
+        {%for i in output%}
+        
+        {
+          bookingId: '{{i[0][0][0]}}',
+          schoolName: '{{i[0][0][2]}}',
+          eventName: '{{i[0][0][5]}}',
+          venue: '{{hallname(i[0][0][1])}}',
+          eventDate: '{{i[0][0][6]}}',
+          starttime: '{{make_time(i[0][0][7])}}',
+          endtime: '{{make_time(i[0][0][8])}}', 
+          resourcePersonName: '{{i[0][0][11]}}',
+          resourcePersonDetail: '{{i[0][0][12]}}',
+          facultyEmail: '{{i[0][0][9]}}',
+          status: '{{i[1]}}'
+        }, 
+        {%endfor%} 
+        ];
+//         {
+//           bookingId: '1',
+//           schoolName: ' Aset',
+//           eventName: 'Event X',
+//           venue: 'Auditorium Hall',
+//           eventDate: '2024-06-30',
+//           durationofevent: '1st half',
+//           resourcePersonName: 'John Doe',
+//           resourcePersonDetail: 'Details for John Doe',
+//           facultyEmail: 'john.doe@example.com',
+//           status: 'ACCEPTED'
+//         },
+//         {
+//           bookingId: '2',
+//           schoolName: 'Asco',
+//           eventName: 'Event Y',
+//           venue: 'Seminar Hall',
+//           eventDate: '2024-07-01',
+//           durationofevent: '2st half',
+//           resourcePersonName: 'Jane Smith',
+//           resourcePersonDetail: 'Details for Jane Smith',
+//           facultyEmail: 'jane.smith@example.com',
+//           status: 'REJECTED'
+//         }
+// ,
+//         {
+//             bookingId: '3',
+//             schoolName: 'Ait',
+//             eventName: 'Science Exhibition',
+//             venue: 'Seminar Hall',
+//             eventDate: '2024-09-10',
+//             durationofevent: 'Full day',
+//             resourcePersonName: 'Priya Sharma',
+//             resourcePersonDetail: 'Details for Priya Sharma',
+//             facultyEmail: 'priya.sharma@gmail.com',
+//             status: 'ACCEPTED'
+//           },
+//           {
+//             bookingId: '4',
+//             schoolName: 'Aset',
+//             eventName: 'Inter-School Debate Competition',
+//             venue: 'crc conference',
+//             eventDate: '2024-07-20',
+//             durationofevent: '2st half',
+//             resourcePersonName: 'Rahul Khanna',
+//             resourcePersonDetail: 'Details for Rahul Khanna',
+//             facultyEmail: 'rahul.khanna@gmail.com',
+//             status: 'PENDING'
+//           },
+//           {
+//             bookingId: '5',
+//             schoolName: 'Abs',
+//             eventName: 'Annual Sports Day',
+//             venue: 'Seminar Hall',
+//             eventDate: '2024-10-05',
+//             durationofevent: '2st half',
+//             resourcePersonName: 'Deepika jha',
+//             resourcePersonDetail: 'Details for Deepika Rao',
+//             facultyEmail: 'deepika.jha@gmail.com',
+//             status: 'REJECTED'
+//           },
+//           {
+//             bookingId: '6',
+//             schoolName: 'Aset',
+//             eventName: 'Music Concert',
+//             venue: 'Room105',
+//             eventDate: '2024-09-15',
+//             durationofevent: 'full day',
+//             resourcePersonName: 'Ananya Reddy',
+//             resourcePersonDetail: 'Details for Ananya Reddy',
+//             facultyEmail: 'ananya.reddy@gmail.com',
+//             status: 'PENDING'
+//           }
+          
+        // Add more booking objects as needed
+      // ];
+
+      function displayBookings(bookings) {
+        const bookingList = document.getElementById('bookingList');
+        bookingList.innerHTML = '';
+
+        bookings.forEach(booking => {
+          const bookingCard = `
+            <table>
+              <tr>
+                <th>Booking ID</th>
+                <th>School Name</th>
+                <th>Event Name</th>
+                <th>Venue</th>
+                <th>Date</th>
+                <th>Start time </th>
+                <th>End time</th>
+                <th>Resource Person</th>
+                <th>Resource Person Detail</th>
+                <th>Faculty Email</th>
+                <th>Status</th>
+              </tr>
+              <tr>
+                <td>${booking.bookingId}</td>
+                <td>${booking.schoolName}</td>
+                <td>${booking.eventName}</td>
+                <td>${booking.venue}</td>
+                <td>${booking.eventDate}</td>
+                <td>${booking.starttime}</td>
+                <td>${booking.endtime}</td>
+                <td>${booking.resourcePersonName}</td>
+                <td>${booking.resourcePersonDetail}</td>
+                <td>${booking.facultyEmail}</td>
+                <td>${booking.status}</td>
+              </tr>
+            </table>
+          `;
+          bookingList.innerHTML += bookingCard;
+        });
+      }
+
+
+      // Function to filter and sort bookings based on status
+function filterAndSortBookings(statusFilter, searchTerm) {
+    let filteredBookings = bookings;
+  
+    // Filter by status
+    if (statusFilter !== '') {
+      filteredBookings = filteredBookings.filter(booking => booking.status === statusFilter);
+    }
+  
+    // Filter by search term
+    if (searchTerm !== '') {
+      const lowerCaseSearchTerm = searchTerm.toLowerCase();
+      filteredBookings = filteredBookings.filter(booking =>
+        booking.bookingId.toLowerCase().includes(lowerCaseSearchTerm) ||
+        booking.schoolName.toLowerCase().includes(lowerCaseSearchTerm) ||
+        booking.eventName.toLowerCase().includes(lowerCaseSearchTerm) ||
+        booking.venue.toLowerCase().includes(lowerCaseSearchTerm) ||
+        booking.eventDate.includes(lowerCaseSearchTerm) ||
+        booking.starttime.toLowerCase().includes(lowerCaseSearchTerm) ||
+        booking.endtime.toLowerCase().includes(lowerCaseSearchTerm) ||
+        booking.resourcePersonName.toLowerCase().includes(lowerCaseSearchTerm) ||
+        booking.resourcePersonDetail.toLowerCase().includes(lowerCaseSearchTerm) ||
+        booking.facultyEmail.toLowerCase().includes(lowerCaseSearchTerm) ||
+        booking.status.toLowerCase().includes(lowerCaseSearchTerm)
+      );
+    }
+  
+    // Sort by status (optional: can be adjusted to sort by other criteria)
+    filteredBookings.sort((a, b) => {
+      if (a.status < b.status) return -1;
+      if (a.status > b.status) return 1;
+      return 0;
+    });
+  
+    displayBookings(filteredBookings);
+  }
+  
+  // Function to export filtered and sorted bookings to Excel
+  function exportToExcel() {
+    // Get filtered and sorted bookings
+    const bookingRows = document.querySelectorAll("#bookingList table tr:nth-child(n+2)");
+    const bookingsToExport = Array.from(bookingRows).map(row => {
+      return {
+        bookingId: row.children[0].textContent,
+        schoolName: row.children[1].textContent,
+        eventName: row.children[2].textContent,
+        venue: row.children[3].textContent,
+        eventDate: row.children[4].textContent,
+        starttime: row.children[5].textContent,
+        endtime: row.children[6].textContent,
+        resourcePersonName: row.children[7].textContent,
+        resourcePersonDetail: row.children[8].textContent,
+        facultyEmail: row.children[9].textContent,
+        status: row.children[10].textContent
+      };
+    });
+  
+    // Prepare CSV content
+    const header = Object.keys(bookingsToExport[0]);
+    const rows = bookingsToExport.map(booking => Object.values(booking));
+    const csvContent = "data:text/csv;charset=utf-8," 
+                     + header.join(",") + "\n" 
+                     + rows.map(row => row.join(",")).join("\n");
+  
+    // Create download link and trigger download
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "bookings.csv");
+    document.body.appendChild(link);
+    link.click();
+  }
+  
+  // Initial display of bookings
+  filterAndSortBookings('', '');
+  
+  // Event listener for sorting dropdown
+  document.querySelectorAll('.dropdown-content a').forEach(link => {
+    link.addEventListener('click', function() {
+      var status = this.textContent.toUpperCase();
+      // console.log(status)
+      if(status=="ALL"){status = ""}
+      // console.log(status)
+      filterAndSortBookings(status, '');
+    });
+  });
+  
+  // Event listener for search input
+  document.getElementById('searchInput').addEventListener('input', function() {
+    const searchTerm = this.value.trim().toLowerCase();
+    filterAndSortBookings('', searchTerm);
+  });
+
+      // tp Initial display
+      displayBookings(bookings);
+    </script>
+  </div>
+</body>
+
+</html>
