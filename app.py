@@ -13,11 +13,12 @@ from flask_mail import Mail, Message
 from werkzeug.utils import secure_filename
 from logging.config import dictConfig
 from subprocess import run
-import dbscript as db         #FOR SQL SERVER DATABASE
-import loginscript as login   #FOR SQL SERVER DATABASE
+# import dbscript as db         #FOR SQL SERVER DATABASE
+# import loginscript as login   #FOR SQL SERVER DATABASE
 
-# import dbscriptlite as db        #FOR SQLITE DATABASE
-# import loginscriptlite as login  #FOR SQLITE DATABASE
+import dbscriptlite as db        #FOR SQLITE DATABASE
+import loginscriptlite as login  #FOR SQLITE DATABASE
+
 
 app = Flask(__name__,
             static_url_path='', 
@@ -1321,8 +1322,8 @@ def admincalender():
     # app.logger.info(output)
     for i in output:
         for j in i:
-            st = maketime(j[1])
-            et = maketime(j[4])
+            st = maketime(j[4])
+            et = maketime(j[1])
             d = datetime.strptime(st, "%H:%M")
             j[1] = d.strftime("%I %p")
             if j[1][0]=="0":
@@ -1334,7 +1335,7 @@ def admincalender():
                 j[4]=j[4][1:]
             j[4] = j[4].lower()
     # app.logger.info(output)
-    return render_template('calenderadmin.html',output=output)
+    return render_template('calenderadmin.html',output=output,server_link=server_link)
 
 @app.route('/server/periodic',methods=['GET'])
 def periodic():
